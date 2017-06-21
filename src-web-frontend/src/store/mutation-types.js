@@ -1,0 +1,5 @@
+export const ADD_SONG = 'ADD_SONG'
+export const SET_SONGS = 'SET_SONGS'
+export const ADD_TAG = 'ADD_TAG'
+export const SET_TAGS = 'SET_TAGS'
+export const SET_UI_IS_SONG_DOWNLOADING = 'SET_UI_IS_SONG_DOWNLOADING'
