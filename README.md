@@ -29,7 +29,7 @@ The project is advancing quickly and a working version is expected by end of Jun
 
 This diagram shows the basic architecture of the Raspberry Pi code:
 
-![Architecture](https://gitlab.com/metachris/python-boilerplate-frontend/badges/master/build.svg)]
+![Architecture](https://raw.githubusercontent.com/metachris/rfid-music-player/master/docs/python-architecture-overview.jpg)
 
 
 ## Feature Ideas
