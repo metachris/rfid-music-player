@@ -12,8 +12,6 @@ PATH_WEB_FRONTEND = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", 
 if not IS_RASPBERRY:
     PATH_WEB_FRONTEND = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "src-web-frontend"))
 
-print("PATH_WEB_FRONTEND", PATH_WEB_FRONTEND)
-
 # Database file
 FN_DATABASE = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "settings.json"))
 
