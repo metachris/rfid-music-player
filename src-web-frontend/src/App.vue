@@ -1,46 +1,66 @@
 <template>
   <div id="app">
-    <router-link to="/"><img src="./assets/turntable.svg" style="max-width: 300px;"></router-link>
-    <router-view></router-view>
+    <nav>
+      <div class="nav-item nav-brand" v-bind:class="{ 'active': route.name === 'Home' }">
+        <router-link to="/">RFID Music Player</router-link>
+      </div>
+      <div class="nav-item" v-bind:class="{ 'active': ['Tags', 'AddTag'].indexOf(route.name) > -1 }">
+        <router-link to="/tags">Tags</router-link>
+      </div>
+      <div class="nav-item" v-bind:class="{ 'active': route.name === 'Music' }">
+        <router-link to="/music">Music</router-link>
+      </div>
+      <div style="clear:both;"></div>
+    </nav>
+
+    <div v-if="!browserHasWebSocketSupport" id="error-no-websocket" class="app-errors alert alert-danger" role="alert">
+      <img src="./assets/turntable.svg" style="max-width: 300px;">
+
+      <p><b>
+        Your browser does not support WebSockets!
+      </b></p>
+      <p>Please switch to a more modern browser such as <a href="https://www.mozilla.org/firefox/new/">Firefox</a> or <a href="https://www.google.com/chrome/browser/desktop">Chrome</a>.</p>
+    </div>
+
+    <div v-if="hasErrors" id="app-errors">
+      <div v-for="error in getErrors" class="app-errors alert alert-danger" role="alert">
+        <b>{{ error }}</b>
+      </div>
+    </div>
+
+    <router-view v-if="browserHasWebSocketSupport"></router-view>
   </div>
 </template>
 
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css'
-import eventhub, { EVENT_RFID_DETECTED, EVENT_DOWNLOAD_PROGRESS, EVENT_DOWNLOAD_STATE } from './eventhub'
-import * as settings from './settings'
+
+import { mapState, mapGetters } from 'vuex'
 
 export default {
   name: 'app',
+  computed: {
+    ...mapState([
+      'browserHasWebSocketSupport',
+      'errors',
+      'route'
+    ]),
+    ...mapGetters([
+      'hasErrors',
+      'getErrors'
+    ])
+  },
   created () {
+    if (!this.$store.state.browserHasWebSocketSupport) {
+      console.error('Browser does not support WebSockets. This webapp does not work in this browser..')
+      return
+    }
+
+    this.$store.dispatch('websocketConnect')
+
     // Load initial data
     this.$store.dispatch('loadTags')
     this.$store.dispatch('loadSongs')
-
-    // Setup Websockets
-    const vm = this
-    vm.ws = new WebSocket(settings.WEBSOCKET_URL)
-
-    vm.ws.onopen = function () {
-      vm.ws.send('Hello, world')
-    }
-
-    vm.ws.onmessage = function (event) {
-      const [msgType, msgValue] = event.data.split(':')
-      console.log(event.data, msgType, msgValue)
-      if (msgType === EVENT_RFID_DETECTED) {
-        eventhub.$emit(EVENT_RFID_DETECTED, msgValue)
-      } else if (msgType === EVENT_DOWNLOAD_PROGRESS) {
-        eventhub.$emit(EVENT_DOWNLOAD_PROGRESS, msgValue)
-      } else if (msgType === EVENT_DOWNLOAD_STATE) {
-        eventhub.$emit(EVENT_DOWNLOAD_STATE, msgValue)
-      }
-    }
-  },
-  beforeDestroy () {
-    // Cleanup websockets
-    this.ws.onmessage = null
-    this.ws = null
   }
 }
 </script>
@@ -50,7 +70,45 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
-  margin-top: 30px;
+  color: #131313;
+}
+
+a {
+  cursor: pointer;
+}
+
+nav {
+  background: #4444b3;
+  text-align: left;
+}
+
+.nav-item {
+  display: inline-block;
+  float: left;
+  color: white;
+  font-size: 16px;
+}
+
+.nav-item:hover, .nav-item:focus, .nav-item.active  {
+  background: #1d1d7d;
+}
+
+.nav-item.active {
+}
+
+.nav-item a {
+  display: block;
+  color: white;
+  text-decoration: none;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+
+.app-errors {
+  margin-top: 40px;
+  margin: 30px;
+  padding: 10px;
 }
 </style>

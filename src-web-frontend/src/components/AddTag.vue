@@ -1,11 +1,13 @@
 <template>
   <div class="add-tag">
-    <h2>Add a Tag</h2>
+
+    <h2>Add a RFID Tag</h2>
+    <img src="../assets/rfid3.jpg" style="max-width: 300px;">
 
     <div v-if="waitingForTag">
-      <div>Waiting for a RFID tag...</div>
+      <div><b>Waiting for a RFID tag...</b></div>
       <img src="../assets/loader.gif" style="max-width:100px;">
-      <div><router-link to="/">Cancel</router-link></div>
+      <div><router-link to="/tags">Cancel</router-link></div>
     </div>
 
     <div v-else>

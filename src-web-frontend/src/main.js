@@ -7,9 +7,13 @@ import VueAxios from 'vue-axios'
 import store from './store'
 import App from './App'
 import router from './router'
+import { sync } from 'vuex-router-sync'
 
 Vue.config.productionTip = false
 Vue.use(VueAxios, axios)
+
+// Setup vuex router sync
+sync(store, router)
 
 /* eslint-disable no-new */
 new Vue({

@@ -64,3 +64,38 @@ Now the system is set up and you can start either only the API or the whole syst
 ## Issues & Improvements
 
 If you encounter any issues or have ideas, please [open an issue](https://github.com/metachris/rfid-music-player/issues/new) or submit a pull request.
+
+
+## Raspberry Pi Setup
+
+If you use the RC522 RFID module, follow the steps as described here:
+
+* https://tutorials-raspberrypi.de/raspberry-pi-rfid-rc522-tueroeffner-nfc/
+* http://www.instructables.com/id/Raspberry-Pi-3-Model-B-MIFARE-RC522-RFID-Tag-Readi/
+* See also https://pinout.xyz for help with the Raspberry pins
+
+Steps:
+
+* Connect the RC522 module with the Raspberry GPIOs
+* Enable SPI with `raspi-config` and in `/boot/config.txt`
+* Reboot and check that SPI mod is loaded: `lsmod | grep spi`
+* Then install the dependencies [SPI-Py](https://github.com/lthiery/SPI-Py) and [MFRC522-python](https://github.com/mxgxw/MFRC522-python):
+
+    # Install python-dev:
+    apt-get install python-dev
+
+    # Install SPI C extensions for Python:
+    git clone https://github.com/lthiery/SPI-Py.git
+    cd SPI-Py
+    python setup.py install
+    cd ..
+
+    # Install MFRC522-python
+    git clone https://github.com/mxgxw/MFRC522-python.git
+    cd MFRC522-python
+
+    # Run the example read program
+    python Read.py
+
+Now just hold the RFID close and see it appear in the console!
+

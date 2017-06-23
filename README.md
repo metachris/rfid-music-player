@@ -1,6 +1,6 @@
 # RFID Music Player
 
-This is a simple music player for kids (2+ years).
+A simple music player for kids age ~2+.
 
 * Songs are started by holding RFID tags to the sensor
 * Can play any mp3 or aac files, and download songs from YouTube

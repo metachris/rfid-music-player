@@ -12,12 +12,12 @@ MODE_CONFIG = object()
 MODE = MODE_PLAYBACK
 
 # DB File
-FN_DATABASE = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "settings.json"))
-PATH_MUSIC = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "music"))
+FN_DATABASE = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "settings.json"))
+PATH_MUSIC = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "music"))
 
 # Logging
 LOGFILE = None
-FN_PLAY_LOGS = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "playback.log"))
+FN_PLAY_LOGS = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "playback.log"))
 
 # Possible audio file extensions
 EXTENSIONS_AUDIO = [

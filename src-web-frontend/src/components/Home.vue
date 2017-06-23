@@ -1,52 +1,19 @@
 <template>
   <div class="home">
-
-    <!-- <h2>RFID Tags</h2> -->
-    <div><router-link to="/add-tag">Add a new tag</router-link></div>
-
-    <center>
-    <table class="table table-striped table-hover">
-      <thead>
-        <tr>
-          <th>Tag ID</th>
-          <th>Label</th>
-          <th>Song</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="tag in tags">
-          <td>{{ tag.id }}</td>
-          <td>{{ tag.label }}</td>
-          <td>{{ tag.song }}</td>
-          <td class="td-actions">
-            <a @click="removeTag(tag.id)" title="Remove"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></a>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-    </center>
-
-    <br>
-    <h2>Songs</h2>
-    <div v-if="!isDownloadingSong"><a @click="addSong">Add a song</a></div>
-    <div v-else>
-      <div class="download-info">
-        <div v-if="downloadState === 'finished'">Converting...</div>
-        <div v-else>Downloading...</div>
-        <div class="progress">
-          <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" :aria-valuenow="downloadProgressValue" aria-valuemin="0" aria-valuemax="100" v-bind:style="{ width: downloadProgressValue + '%' }">
-          </div>
+    <div class="main-items">
+      <router-link to="/tags">
+        <div class="main-item">
+          <h2>RFID Tags</h2>
+          <img src="../assets/rfid3.jpg">
         </div>
-      </div>
-    </div>
+      </router-link>
 
-    <div class="songs">
-      <div v-for="song in songs" class="song">
-        <div v-if="song.thumbnail" class="song-thumbnail"><img :src="apiBaseUrl + '/thumbnail/' + song.thumbnail"></div>
-        <div class="song-filename">{{ song.filename }}</div>
-        <div style="clear: both;"></div>
-      </div>
+      <router-link to="/music">
+        <div class="main-item">
+          <h2>Music Library</h2>
+          <img src="../assets/music1.svg">
+        </div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -115,9 +82,10 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .home {
-  margin-top: 10px;
+  margin-top: 80px;
   margin-bottom: 60px;
 }
+
 a {
   cursor: pointer;
 }
@@ -139,37 +107,41 @@ a {
   color: #42b983;
 }
 
-td.td-actions {
-  text-align: right;
-  padding-right: 40px;
-}
-
-.songs {
+.main-items {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  align-items: center;
   flex-wrap: wrap;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
-.song {
-  max-width: 400px;
-  margin: 10px;
-  padding: 10px;
-  border: 1px solid #eee;
-  border-radius: 2px;
+.main-items a:hover {
+  text-decoration: none;
 }
 
-.song-thumbnail img {
+.main-item {
+  margin: 20px;
+  width: 300px;
+  min-width: 120px;
+  height: 300px;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.main-item:hover {
+  border: 2px solid #666;
+}
+
+.main-item img {
   max-width: 200px;
-  float: left;
-  margin-right: 10px;
 }
 
-.download-info {
-  margin: 10px;
-  margin-bottom: 20px;
+.main-item h2 {
+  margin: 0;
+  margin-bottom: 8px;
 }
-.progress {
-  max-width: 600px;
-  margin: auto;
-}
+
 </style>

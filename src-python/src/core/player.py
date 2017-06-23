@@ -7,10 +7,10 @@ from threading import Thread, Event
 
 from logzero import setup_logger
 
-import database
-import settings
-import utils
-from eventbus import ee
+from core import database
+from core import settings
+from core import utils
+from core.eventbus import ee
 
 logger = setup_logger(logfile=settings.LOGFILE)
 

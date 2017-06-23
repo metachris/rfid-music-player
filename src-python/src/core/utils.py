@@ -1,6 +1,6 @@
 import os
 import hashlib
-import settings
+from core import settings
 
 def get_music_files():
     """ Return all audio files available """
@@ -30,12 +30,12 @@ def get_songs():
     return songs
 
 
-def make_cmd_playback(fn_mp3):
+def make_cmd_playback(fn_audio):
     """ Build the playback command depending on the platform """
     if settings.IS_RASPBERRY:
-        return ["omxplayer", fn_mp3, "-o", "both"]
+        return ["omxplayer", fn_audio, "-o", "both"]
     else:
-        return ["afplay", fn_mp3]
+        return ["afplay", fn_audio]
 
 
 if __name__ == "__main__":

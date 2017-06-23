@@ -1,6 +1,6 @@
 import os
 import json
-import settings
+from core import settings
 
 TAG_DEMO = {
     "id": "123",
