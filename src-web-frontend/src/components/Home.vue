@@ -4,14 +4,14 @@
       <router-link to="/tags">
         <div class="main-item">
           <h2>RFID Tags</h2>
-          <img src="../assets/rfid3.jpg">
+          <img src="../assets/rfid.png">
         </div>
       </router-link>
 
       <router-link to="/music">
         <div class="main-item">
           <h2>Music Library</h2>
-          <img src="../assets/music1.svg">
+          <img src="../assets/music.png">
         </div>
       </router-link>
     </div>
@@ -133,6 +133,7 @@ a {
 
 .main-item:hover {
   border: 2px solid #666;
+  background: #fafade;
 }
 
 .main-item img {

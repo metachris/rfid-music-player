@@ -2,7 +2,7 @@
   <div class="add-tag">
 
     <h2>Add a RFID Tag</h2>
-    <img src="../assets/rfid3.jpg" style="max-width: 300px;">
+    <img src="../assets/rfid.png" style="max-width: 300px;">
 
     <div v-if="waitingForTag">
       <div><b>Waiting for a RFID tag...</b></div>

@@ -2,7 +2,7 @@
   <div class="music">
 
     <h2>Music Library</h2>
-    <img src="../assets/music1.svg" style="max-width: 300px;">
+    <img src="../assets/music.png" style="max-width: 300px;">
 
     <div v-if="!isDownloadingSong" class="add-song"><a @click="addSong"><button type="button" class="btn btn-success">Add a new song</button></a></div>
     <div v-else>

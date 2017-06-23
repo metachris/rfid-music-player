@@ -2,7 +2,7 @@
   <div class="tags">
 
     <h2>RFID Tags</h2>
-    <img src="../assets/rfid3.jpg" style="max-width: 300px;">
+    <img src="../assets/rfid.png" style="max-width: 300px;">
 
     <!-- <h2>RFID Tags</h2> -->
     <div class="add-tag"><router-link to="/add-tag"><button type="button" class="btn btn-success">Add a new tag</button></router-link></div>

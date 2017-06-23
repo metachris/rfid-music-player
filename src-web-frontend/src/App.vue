@@ -14,8 +14,6 @@
     </nav>
 
     <div v-if="!browserHasWebSocketSupport" id="error-no-websocket" class="app-errors alert alert-danger" role="alert">
-      <img src="./assets/turntable.svg" style="max-width: 300px;">
-
       <p><b>
         Your browser does not support WebSockets!
       </b></p>
