@@ -17,7 +17,7 @@ File | Functionality
 `player.py` | Playing the songs when the RFID events arrive.
 `rfidreader.py` | Interacts with the RFID reader.
 `api.py` | REST + Websockets API for the web interface.
-`eventbus.py`| simple, central event bus which all components can import to subscribe to events and to emit events.
+`eventhub.py`| simple, central event bus which all components can import to subscribe to events and to emit events.
 
 #### Other files
 
@@ -27,6 +27,7 @@ File | Functionality
 `database.py` | a simple and crude JSON file database
 `settings.py` | project configuration and settings
 `utils.py` | a few utilities
+
 
 #### External modules
 
@@ -70,25 +71,33 @@ If you encounter any issues or have ideas, please [open an issue](https://github
 
 If you use the RC522 RFID module, follow the steps as described here:
 
-* https://tutorials-raspberrypi.de/raspberry-pi-rfid-rc522-tueroeffner-nfc/
-* http://www.instructables.com/id/Raspberry-Pi-3-Model-B-MIFARE-RC522-RFID-Tag-Readi/
-* See also https://pinout.xyz for help with the Raspberry pins
-
-Steps:
-
 * Connect the RC522 module with the Raspberry GPIOs
 * Enable SPI with `raspi-config` and in `/boot/config.txt`
 * Reboot and check that SPI mod is loaded: `lsmod | grep spi`
-* Then install the dependencies [SPI-Py](https://github.com/lthiery/SPI-Py) and [MFRC522-python](https://github.com/mxgxw/MFRC522-python):
+* Raspberry system setup:
 
-    # Install python-dev:
-    apt-get install python-dev
+    apt-get update
+
+    # Install ffmpeg (see https://github.com/ccrisan/motioneye/wiki/Install-On-Raspbian)
+    wget https://github.com/ccrisan/motioneye/wiki/precompiled/ffmpeg_3.1.1-1_armhf.deb
+    dpkg -i ffmpeg_3.1.1-1_armhf.deb
+
+    # Install dependencies
+    apt-get install python-pip python-dev
+
+* Then install the dependency [SPI-Py](https://github.com/lthiery/SPI-Py):
 
     # Install SPI C extensions for Python:
     git clone https://github.com/lthiery/SPI-Py.git
     cd SPI-Py
     python setup.py install
-    cd ..
+
+* Upload the software (TODO)
+
+
+#### RFID Reader Test
+
+You can install [MFRC522-python](https://github.com/mxgxw/MFRC522-python) to test the RFID reader:
 
     # Install MFRC522-python
     git clone https://github.com/mxgxw/MFRC522-python.git
@@ -98,4 +107,11 @@ Steps:
     python Read.py
 
 Now just hold the RFID close and see it appear in the console!
+
+See also:
+
+* https://tutorials-raspberrypi.de/raspberry-pi-rfid-rc522-tueroeffner-nfc/
+* http://www.instructables.com/id/Raspberry-Pi-3-Model-B-MIFARE-RC522-RFID-Tag-Readi/
+* See also https://pinout.xyz for help with the Raspberry pins
+
 

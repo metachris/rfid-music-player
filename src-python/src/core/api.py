@@ -23,7 +23,7 @@ from logzero import setup_logger
 from core import database
 from core import settings
 from core import utils
-from core.eventbus import ee
+from core.eventhub import ee
 
 logger = setup_logger(logfile=settings.LOGFILE)
 
@@ -88,12 +88,17 @@ class API:
         # Definition of the routes.
         @app.route("/")
         def _home():
-            return "Hello World"
+            return send_from_directory(settings.PATH_WEB_FRONTEND, "index.html")
 
         @app.route('/thumbnail/<path:path>')
         def _thumbnail(path):
-            print("thumbnail: %s", path)
+            logger.debug("thumbnail: %s", path)
             return send_from_directory(settings.PATH_MUSIC, path)
+
+        @app.route('/static/<path:path>')
+        def _static(path):
+            logger.debug("static: %s", path)
+            return send_from_directory(os.path.join(settings.PATH_WEB_FRONTEND, "static"), path)
 
         @app.route("/songs")
         def _api_get_songs():
@@ -181,7 +186,7 @@ class API:
 
     def _run(self, debug=False):
         """ Runs the app """
-        # Step 1: Setup eventbus handlers
+        # Step 1: Setup eventhub handlers
         @ee.on("rfid_detected")
         def _rfid_detected(rfid_id):
             logger.info("rfid_detected: %s", rfid_id)

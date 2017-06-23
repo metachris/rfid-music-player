@@ -6,7 +6,7 @@ import time
 from logzero import LogFormatter, setup_logger
 
 from core import settings
-from core.eventbus import ee
+from core.eventhub import ee
 
 if settings.IS_RASPBERRY:
     import RPi.GPIO as GPIO

@@ -10,7 +10,7 @@ from logzero import setup_logger
 from core import database
 from core import settings
 from core import utils
-from core.eventbus import ee
+from core.eventhub import ee
 
 logger = setup_logger(logfile=settings.LOGFILE)
 
@@ -45,7 +45,7 @@ class Player(object):
         # Write playback log entry
         with open(settings.FN_PLAY_LOGS, "a") as f:
             now = datetime.datetime.now()
-            f.write("%s: start: %s" % (now.isoformat(), self.fn_sound))
+            f.write("%s: start: %s\n" % (now.isoformat(), self.fn_sound))
 
         # If already playing, kill player
         if self.is_playing:
