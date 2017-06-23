@@ -89,8 +89,14 @@ nav {
   font-size: 16px;
 }
 
-.nav-item:hover, .nav-item:focus, .nav-item.active  {
+.nav-item:hover,
+.nav-item:focus,
+.nav-item a:focus,
+.nav-item a:hover,
+.nav-item.active  {
   background: #1d1d7d;
+  color: white;
+  text-decoration: none;
 }
 
 .nav-item.active {

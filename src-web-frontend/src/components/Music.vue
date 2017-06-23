@@ -7,7 +7,7 @@
     <div v-if="!isDownloadingSong" class="add-song"><a @click="addSong"><button type="button" class="btn btn-success">Add a new song</button></a></div>
     <div v-else>
       <div class="download-info">
-        <div v-if="downloadState === 'finished'">Converting...</div>
+        <div v-if="downloadState === 'finished'">Converting (this may take a few minutes)...</div>
         <div v-else>Downloading...</div>
         <div class="progress">
           <div class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" :aria-valuenow="downloadProgressValue" aria-valuemin="0" aria-valuemax="100" v-bind:style="{ width: downloadProgressValue + '%' }">
