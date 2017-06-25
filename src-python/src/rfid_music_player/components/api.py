@@ -24,7 +24,7 @@ from rfid_music_player.core import database
 from rfid_music_player.core import settings
 from rfid_music_player.core import filesystem
 from rfid_music_player.core import utils
-from rfid_music_player.core.eventhub import ee
+from rfid_music_player.core.eventhub import ee, EVENT_RFID_TAG_DETECTED, EVENT_RFID_TAG_REMOVED
 from basecomponent import BaseComponent
 
 logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
@@ -201,7 +201,7 @@ class API(BaseComponent):
         debug=False
 
         # Step 1: Setup eventhub handlers
-        @ee.on("rfid_detected")
+        @ee.on(EVENT_RFID_TAG_DETECTED)
         def _rfid_detected(rfid_id):
             logger.info("rfid_detected: %s", rfid_id)
             self.websocket_send("rfid_detected:%s" % rfid_id)
@@ -255,7 +255,7 @@ def test_threaded():
             if msg.startswith("dl"):
                 test_fake_download()
             else:
-                ee.emit("rfid_detected", msg)
+                ee.emit(EVENT_RFID_TAG_DETECTED, msg)
     except KeyboardInterrupt:
         pass
     finally:

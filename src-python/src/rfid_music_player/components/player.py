@@ -38,7 +38,6 @@ class Player(BaseComponent):
 
     def run(self):
         self.event_quit.wait()
-        logger.info("bye")
 
     def shutdown(self):
         self.kill_player()

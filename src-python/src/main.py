@@ -4,39 +4,44 @@ Documentation
 
 See also https://www.python-boilerplate.com/flask
 """
+import signal
+
 from logzero import setup_logger
 
 from rfid_music_player.core import settings
 from rfid_music_player.components.api import API
 from rfid_music_player.components.player import Player
-from rfid_music_player.inputs.rfid_mfrc522 import RFIDReader
+from rfid_music_player.inputs import start_all_input_threads, stop_all_input_threads
 
 logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
 
-
 def main():
-    # The api, which runs in a background thread
+    # Start all input threads (RFID, GPIO, etc)
+    input_threads = start_all_input_threads()
+
+    # Start the api
     api = API()
-    api.run(threaded=True, debug=False)
+    api.start()
 
-    # The player asynchronously waits for events and plays in the background
+    # Start the player
     player = Player()
+    player.start()
 
-    # The input manager also runs in the background, and can handle a number
-    # of inputs such as RFID, GPIO, etc.
-    rfid = RFIDReader()
-
+    # Now do nothing until CTRL+C
+    logger.info("All threads started. Now waiting for events.")
     try:
-        rfid.run()
+        signal.pause()
     except KeyboardInterrupt:
-        pass
-    except Exception as exc:
-        logger.exception(exc)
-        raise
+        print("")
     finally:
+        # Finally, shutdown everything
+        api.shutdown()
         player.shutdown()
-        rfid.shutdown()
+        stop_all_input_threads()
+
+    logger.info("bye")
+
 
 if __name__ == "__main__":
     main()
