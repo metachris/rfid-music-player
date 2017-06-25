@@ -36,10 +36,10 @@ def make_writable():
     Make filesystem writeable. Must be released with release_writable(..)
     Returns a uid that must be supplied to release_writable(uid).
     """
-    uid = uuid.uuid4()
+    uid = str(uuid.uuid4())
     locks.append(uid)
     _set_writable()
-    return str(uid)
+    return uid
 
 def release_writable(uid):
     logger.debug("release_writable. locks: %s", locks)
