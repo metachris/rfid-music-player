@@ -7,7 +7,7 @@ import uuid
 from logzero import setup_logger
 from rfid_music_player.core import settings
 
-logger = setup_logger(logfile=settings.LOGFILE)
+logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
 HOME = os.path.expanduser("~")
 
@@ -39,13 +39,13 @@ def make_writable():
     uid = uuid.uuid4()
     locks.append(uid)
     _set_writable()
-    return uid
+    return str(uid)
 
 def release_writable(uid):
-    logger.debug("release_writable. locks:", locks)
+    logger.debug("release_writable. locks: %s", locks)
     locks.remove(uid)
     if not locks:
-        logger.debug("release_writable. no more locks, switching back to read-only.")
+        logger.info("release_writable. no more locks, switching back to read-only.")
         _set_readonly()
 
 if __name__ == "__main__":

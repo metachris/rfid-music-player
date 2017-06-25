@@ -1,4 +1,5 @@
 import os
+import logging
 import platform
 
 # Path of the current script, used as base for relative path and file references
@@ -8,19 +9,24 @@ DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
 IS_RASPBERRY = platform.linux_distribution()[0].lower() == 'debian'
 
 # Web frontend path (internal, fixed, used for the API)
-PATH_WEB_FRONTEND = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "src-web-frontend", "dist"))
+PATH_WEB_FRONTEND = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "..", "src-web-frontend", "dist"))
 if not IS_RASPBERRY:
-    PATH_WEB_FRONTEND = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "src-web-frontend"))
+    PATH_WEB_FRONTEND = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "..", "src-web-frontend"))
+print("PATH_WEB_FRONTEND", PATH_WEB_FRONTEND)
 
 # Database file
-FN_DATABASE = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "settings.json"))
+FN_DATABASE = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "..", "settings.json"))
+print("FN_DATABASE", FN_DATABASE)
 
 # Music root (can be overwritten)
-PATH_MUSIC_DEFAULT = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "music"))
+PATH_MUSIC_DEFAULT = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "..", "music"))
 PATH_MUSIC = os.getenv("RFID_PLAYER_MUSIC_ROOT", PATH_MUSIC_DEFAULT)
+print("PATH_MUSIC", PATH_MUSIC)
 
 # Log file (can be overwritten)
 LOGFILE = os.getenv("RFID_PLAYER_LOGFILE")
+LOGLEVEL = logging.DEBUG
+# LOGLEVEL = logging.INFO
 
 # Playback logs (can be overwritten)
 FN_PLAY_LOGS_DEFAULT = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "playback.log"))

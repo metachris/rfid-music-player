@@ -13,7 +13,7 @@ if settings.IS_RASPBERRY:
     import MFRC522
 
 log_formatter = LogFormatter(fmt='%(color)s[%(levelname)1.1s %(asctime)s %(name)s:%(lineno)d]%(end_color)s %(message)s')
-logger = setup_logger("rfid-mfrc522", logfile=settings.LOGFILE, formatter=log_formatter)
+logger = setup_logger("rfid-mfrc522", logfile=settings.LOGFILE, formatter=log_formatter, level=settings.LOGLEVEL)
 
 
 # Timeout for sending the last detected tag a second time
