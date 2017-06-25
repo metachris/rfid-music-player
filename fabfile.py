@@ -19,14 +19,9 @@ if not env.hosts:
 
 @task
 @parallel
-def upload():
+def deploy():
     """ Upload sources to a Raspberry """
-    put("requirements.txt", DIR_REMOTE, mirror_local_mode=True)
-    put("src", DIR_REMOTE, mirror_local_mode=True, use_sudo=True)
-
-
-@task
-@parallel
-def uploadx():
-    """ Upload sources to a Raspberry """
-    put("src/fb.py", DIR_REMOTE, mirror_local_mode=True)
+    run("rw")
+    with cd(DIR_REMOTE):
+        run("git pull")
+        run("player restart")
