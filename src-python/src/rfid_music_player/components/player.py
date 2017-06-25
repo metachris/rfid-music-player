@@ -36,7 +36,7 @@ class Player(BaseComponent):
             if self.is_playing:
                 self.kill_player()
 
-    def run(self):
+    def run_component(self):
         self.event_quit.wait()
 
     def shutdown(self):

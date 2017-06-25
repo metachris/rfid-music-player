@@ -8,6 +8,9 @@ DIR_SCRIPT = os.path.dirname(os.path.realpath(__file__))
 # This is quick and cheap, but will recognize normal Debian Linux as Raspberry Pi
 IS_RASPBERRY = platform.linux_distribution()[0].lower() == 'debian'
 
+PATH_PROJECT_ROOT = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", ".."))
+print("PATH_PROJECT_ROOT", PATH_PROJECT_ROOT)
+
 # Web frontend path (internal, fixed, used for the API)
 PATH_WEB_FRONTEND = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "..", "..", "src-web-frontend", "dist"))
 if not IS_RASPBERRY:
@@ -25,8 +28,10 @@ print("PATH_MUSIC", PATH_MUSIC)
 
 # Log file (can be overwritten)
 LOGFILE = os.getenv("RFID_PLAYER_LOGFILE")
-LOGLEVEL = logging.DEBUG
+LOGLEVEL = os.getenv("RFID_PLAYER_LOGLEVEL", logging.DEBUG)  # See https://docs.python.org/2/library/logging.html#logging-levels
 # LOGLEVEL = logging.INFO
+print("LOGFILE", LOGFILE)
+print("LOGLEVEL", LOGLEVEL)
 
 # Playback logs (can be overwritten)
 FN_PLAY_LOGS_DEFAULT = os.path.realpath(os.path.join(DIR_SCRIPT, "..", "..", "playback.log"))

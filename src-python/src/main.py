@@ -17,9 +17,6 @@ logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
 
 def main():
-    # Start all input threads (RFID, GPIO, etc)
-    input_threads = start_all_input_threads()
-
     # Start the api
     api = API()
     api.start()
@@ -28,7 +25,10 @@ def main():
     player = Player()
     player.start()
 
-    # Now do nothing until CTRL+C
+    # Start all input threads (RFID, GPIO, etc)
+    input_threads = start_all_input_threads()
+
+    # All systems up and running. Now wait forever
     logger.info("All threads started. Now waiting for events.")
     try:
         signal.pause()

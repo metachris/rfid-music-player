@@ -8,34 +8,6 @@ This diagram shows the basic architecture:
 ![Architecture](https://raw.githubusercontent.com/metachris/rfid-music-player/master/docs/python-architecture-overview.jpg)
 
 
-## Python Code Overview
-
-#### Components
-
-File | Functionality
---- | ---
-`player.py` | Playing the songs when the RFID events arrive.
-`rfidreader.py` | Interacts with the RFID reader.
-`api.py` | REST + Websockets API for the web interface.
-`eventhub.py`| simple, central event bus which all components can import to subscribe to events and to emit events.
-
-#### Other files
-
-File | Functionality
---- | ---
-`main.py` | simple entry point which starts all components
-`database.py` | a simple and crude JSON file database
-`settings.py` | project configuration and settings
-`utils.py` | a few utilities
-
-
-#### External modules
-
-* [logzero](https://github.com/metachris/logzero) for logging, which is a very simple single-file logging module. It provides nice and colored output to the console and can log to files too.
-* [Flask](http://flask.pocoo.org/) for the API
-* [pymitter](https://github.com/riga/pymitter) for the event bus
-* [youtube-dl](https://github.com/rg3/youtube-dl) for downloading songs from YouTube
-
 
 ## Getting started
 
@@ -62,6 +34,36 @@ Now the system is set up and you can start either only the API or the whole syst
 
     # Start the API (enter anything on the keyboard to mock detected RFID chips)
     $ python components/api.py
+
+
+
+## Python Code Overview
+
+#### Components
+
+File | Functionality
+--- | ---
+`player.py` | Playing the songs when the RFID events arrive.
+`api.py` | REST + Websockets API for the web interface.
+`inputs` | Interacts with the RFID reader.
+`eventhub.py`| simple, central event bus which all components can import to subscribe to events and to emit events.
+
+#### Other files
+
+File | Functionality
+--- | ---
+`main.py` | simple entry point which starts all components
+`database.py` | a simple and crude JSON file database
+`settings.py` | project configuration and settings
+`utils.py` | a few utilities
+
+
+#### External modules
+
+* [logzero](https://github.com/metachris/logzero) for logging, which is a very simple single-file logging module. It provides nice and colored output to the console and can log to files too.
+* [Flask](http://flask.pocoo.org/) for the API
+* [pymitter](https://github.com/riga/pymitter) for the event bus
+* [youtube-dl](https://github.com/rg3/youtube-dl) for downloading songs from YouTube
 
 
 ## Issues & Improvements
@@ -119,8 +121,7 @@ See also:
 
 ## Tips & Tricks
 
-Sometimes it's nice to work directly on the Raspberry. I sometimes use SSHFS to mount a directory
-on the Pi to my OSX dev machine.
+Sometimes it's nice to work directly on the Raspberry. I sometimes use SSHFS to mount a directory on the Pi to my OSX dev machine.
 
 For this you need sshfs and osxfuse: https://github.com/osxfuse/sshfs/releases
 

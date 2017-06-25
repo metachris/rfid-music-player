@@ -2,6 +2,9 @@
 API for the web frontend for the ghoust game Python service.
 
 See also https://www.python-boilerplate.com/flask
+
+TODO:
+* Request logs?
 """
 import os
 import time
@@ -196,10 +199,8 @@ class API(BaseComponent):
         for websocket in self.websockets:
             websocket.send(message)
 
-    def run(self):
+    def run_component(self):
         """ Runs the app """
-        debug=False
-
         # Step 1: Setup eventhub handlers
         @ee.on(EVENT_RFID_TAG_DETECTED)
         def _rfid_detected(rfid_id):
@@ -217,17 +218,10 @@ class API(BaseComponent):
             self.websocket_send("download_state:%s" % state)
 
         # Step 2: Run the app
-        try:
-            port = int(os.environ.get("RFID_API_PORT", 5000))
-            self.app.config.update(dict(DEBUG=debug))
-            logger.info("Webserver listening on http://localhost:%s", port)
-            self.server = pywsgi.WSGIServer(('', port), self.app, handler_class=WebSocketHandler)
-            self.server.serve_forever()
-        except Exception as e:
-            logger.exception(e)
-            raise
-        finally:
-            logger.info("api end")
+        port = int(os.environ.get("RFID_API_PORT", 5000))
+        logger.info("Webserver listening on http://localhost:%s", port)
+        self.server = pywsgi.WSGIServer(('', port), self.app, handler_class=WebSocketHandler)
+        self.server.serve_forever()
 
     def shutdown(self):
         # This server.stop() takes exactly 1 minute (wtf). To make this faster, this

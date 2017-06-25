@@ -26,27 +26,23 @@ SEND_EVENT_TAG_REMOVED = True
 
 class RFIDReader(BaseComponent):
     MIFAREReader = None
-    is_running = False
     tag_last_uid = None
     tag_last_timestamp = 0
 
     def __init__(self):
         BaseComponent.__init__(self)
 
-        self.is_running = False
         self.tag_last_uid = None
         self.tag_last_timestamp = 0
 
-    def run(self):
-        self.is_running = True
-
+    def run_component(self):
         # Running on the dev machine
         if not settings.IS_RASPBERRY:
             return self.run_fake()
 
         # Running on the Pi
         self.MIFAREReader = MFRC522.MFRC522()
-        while self.is_running:
+        while not self.event_quit.is_set():
             self.read_rfid()
             time.sleep(0.5)
 
@@ -96,28 +92,17 @@ class RFIDReader(BaseComponent):
 
     def run_fake(self):
         """ Waits for RFID input and plays the correct song """
-        logger.info("Waiting for RFID chip...")
-        while self.is_running:
-            # TODO: wait for RFID change
+        while not self.event_quit.is_set():
+            logger.info("Waiting for RFID chip 123...")
             ee.emit(EVENT_RFID_TAG_DETECTED, "1234")
-            time.sleep(30)
+            self.event_quit.wait(10)
 
     def shutdown(self):
-        self.is_running = False
+        self.event_quit.set()
 
         if settings.IS_RASPBERRY:
             GPIO.cleanup()
 
 
 if __name__ == "__main__":
-    rfid_reader = RFIDReader()
-    rfid_reader.start()
-    try:
-        signal.pause()
-    except KeyboardInterrupt:
-        pass
-    finally:
-        rfid_reader.shutdown()
-        print("\nbye")
-
-    rfid_reader.join()
+    RFIDReader().run_dev()
