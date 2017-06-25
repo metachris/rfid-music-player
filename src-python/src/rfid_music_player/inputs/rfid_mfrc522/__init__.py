@@ -25,6 +25,7 @@ SEND_EVENT_TAG_REMOVED = True
 
 
 class RFIDReader(BaseComponent):
+    MIFAREReader = None
     is_running = False
     tag_last_uid = None
     tag_last_timestamp = 0
@@ -39,9 +40,12 @@ class RFIDReader(BaseComponent):
     def run(self):
         self.is_running = True
 
+        # Running on the dev machine
         if not settings.IS_RASPBERRY:
             return self.run_fake()
 
+        # Running on the Pi
+        self.MIFAREReader = MFRC522.MFRC522()
         while self.is_running:
             self.read_rfid()
             time.sleep(0.5)
@@ -52,18 +56,17 @@ class RFIDReader(BaseComponent):
 
         # Normal RFID handling for the raspberry
         # Create an object of the class MFRC522
-        MIFAREReader = MFRC522.MFRC522()
-        (status, tag_type) = MIFAREReader.MFRC522_Request(MIFAREReader.PICC_REQIDL)
+        (status, tag_type) = self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
 
         # If a card is found
-        # if status == MIFAREReader.MI_OK:
+        # if status == self.MIFAREReader.MI_OK:
         #     logger.info("Card detected")
 
         # Get the UID of the card
-        (status, uid) = MIFAREReader.MFRC522_Anticoll()
+        (status, uid) = self.MIFAREReader.MFRC522_Anticoll()
 
         # If we have the UID, continue
-        if status == MIFAREReader.MI_OK:
+        if status == self.MIFAREReader.MI_OK:
             # Print UID
             card_uid = "%s-%s-%s-%s" % (str(uid[0]), str(uid[1]), str(uid[2]), str(uid[3]))
             logger.debug("Card detected with UID: %s", card_uid)
