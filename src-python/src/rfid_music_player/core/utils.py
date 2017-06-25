@@ -1,6 +1,6 @@
 import os
 import hashlib
-from core import settings
+from rfid_music_player.core import settings
 
 def get_music_files():
     """ Return all audio files available """

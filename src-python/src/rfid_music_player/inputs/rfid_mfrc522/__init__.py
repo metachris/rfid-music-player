@@ -5,8 +5,8 @@ when detected starts all registered callbacks.
 import time
 from logzero import LogFormatter, setup_logger
 
-from core import settings
-from core.eventhub import ee
+from rfid_music_player.core import settings
+from rfid_music_player.core.eventhub import ee
 
 if settings.IS_RASPBERRY:
     import RPi.GPIO as GPIO

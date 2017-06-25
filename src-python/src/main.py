@@ -6,10 +6,10 @@ See also https://www.python-boilerplate.com/flask
 """
 from logzero import setup_logger
 
-from core import settings
-from core.api import API
-from core.player import Player
-from core.inputs.rfid_mfrc522 import RFIDReader
+from rfid_music_player.core import settings
+from rfid_music_player.components.api import API
+from rfid_music_player.components.player import Player
+from rfid_music_player.inputs.rfid_mfrc522 import RFIDReader
 
 logger = setup_logger(logfile=settings.LOGFILE)
 

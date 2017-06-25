@@ -39,27 +39,29 @@ File | Functionality
 
 ## Getting started
 
-This is how you can get started:
+This is how you can get started with development:
 
-    # Create a virtual environment with Python 3
-    $ virtualenv -p python3 .venv3
+    # Create a virtual environment with Python 2
+    $ virtualenv -p python2 .venv2
 
     # Activate the virtual env
-    $ . .venv3/bin/activate
+    $ . .venv2/bin/activate
 
     # Install the dependencies
     $ pip install -r requirements.txt
+    $ pip install -r requirements_dev.txt
+
+    # Install the package in development mode
+    $ cd src
+    $ pip install -e .
 
 Now the system is set up and you can start either only the API or the whole system:
 
-    # Change into the actual source directory
-    $ cd src
-
-    # Start the API (enter anything on the keyboard to mock detected RFID chips)
-    $ python api.py
-
     # Start the whole system
     $ python main.py
+
+    # Start the API (enter anything on the keyboard to mock detected RFID chips)
+    $ python components/api.py
 
 
 ## Issues & Improvements

@@ -20,10 +20,10 @@ import youtube_dl
 from logzero import setup_logger
 
 # Internal imports
-from core import database
-from core import settings
-from core import utils
-from core.eventhub import ee
+from rfid_music_player.core import database
+from rfid_music_player.core import settings
+from rfid_music_player.core import utils
+from rfid_music_player.core.eventhub import ee
 
 logger = setup_logger(logfile=settings.LOGFILE)
 

@@ -1,6 +1,6 @@
 import os
 import json
-from core import settings
+from rfid_music_player.core import settings
 
 TAG_DEMO = {
     "id": "123",
