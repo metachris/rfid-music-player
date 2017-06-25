@@ -115,3 +115,10 @@ See also:
 * See also https://pinout.xyz for help with the Raspberry pins
 
 
+## Tips & Tricks
+
+Sometimes it's nice to work directly on the Raspberry. I sometimes use SSHFS to mount a directory
+on the Pi to my OSX dev machine.
+
+For this you need sshfs and osxfuse: https://github.com/osxfuse/sshfs/releases
+
