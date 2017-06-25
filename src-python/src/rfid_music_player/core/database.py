@@ -1,6 +1,7 @@
 import os
 import json
 from rfid_music_player.core import settings
+from rfid_music_player.core import filesystem
 
 TAG_DEMO = {
     "id": "123",
@@ -23,8 +24,10 @@ if os.path.isfile(settings.FN_DATABASE):
 
 # Write data to file
 def _write_data_to_file():
+    lock_uid = filesystem.make_writable()
     with open(settings.FN_DATABASE, "w") as f:
         f.write(json.dumps(data))
+    filesystem.release_writable(lock_uid)
 
 def get(key, defaultValue=None):
     """ Get a key, if not existing return defaultValue or None """

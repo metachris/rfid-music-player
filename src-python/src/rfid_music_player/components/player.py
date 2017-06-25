@@ -43,9 +43,9 @@ class Player(object):
 
     def start_playback(self):
         # Write playback log entry
-        with open(settings.FN_PLAY_LOGS, "a") as f:
-            now = datetime.datetime.now()
-            f.write("%s: start: %s\n" % (now.isoformat(), self.fn_sound))
+        # with open(settings.FN_PLAY_LOGS, "a") as f:
+        #     now = datetime.datetime.now()
+        #     f.write("%s: start: %s\n" % (now.isoformat(), self.fn_sound))
 
         # If already playing, kill player
         if self.is_playing:
