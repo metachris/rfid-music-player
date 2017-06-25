@@ -72,6 +72,8 @@ class RFIDReader(BaseComponent):
                 # After detecting a chip, wait at least this amount of time until
                 # sending another "detected" event
                 if time_now - self.tag_last_timestamp < SEND_EVENT_TAG_DETECTED_AGAIN_TIMEOUT_SEC:
+                    # extend the timeout, else it will always resend after X seconds
+                    self.tag_last_timestamp = time_now
                     logger.debug("- same card uid within SEND_EVENT_TAG_DETECTED_AGAIN_TIMEOUT_SEC, not sending again")
                     return
 
