@@ -10,23 +10,39 @@ from logzero import setup_logger
 from rfid_music_player.core import database
 from rfid_music_player.core import settings
 from rfid_music_player.core import utils
-from rfid_music_player.core.eventhub import ee
+from rfid_music_player.core.eventhub import ee, EVENT_RFID_TAG_DETECTED, EVENT_RFID_TAG_REMOVED
+from basecomponent import BaseComponent
 
-logger = setup_logger(logfile=settings.LOGFILE)
+logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
 
-class Player(object):
+class Player(BaseComponent):
+    """
+    The player is completely asynchronous, it just starts omxplayer in the background.
+    """
     def __init__(self):
+        BaseComponent.__init__(self)
+
         self.player_process = None
         self.fn_sound = None
         self.is_playing = False
 
-        @ee.on("rfid_detected")
+        @ee.on(EVENT_RFID_TAG_DETECTED)
         def _rfid_detected(rfid_id):
             self.rfid_detected(rfid_id)
 
+        @ee.on(EVENT_RFID_TAG_REMOVED)
+        def _rfid_removed(rfid_id):
+            if self.is_playing:
+                self.kill_player()
+
+    def run(self):
+        self.event_quit.wait()
+        logger.info("bye")
+
     def shutdown(self):
         self.kill_player()
+        self.event_quit.set()
 
     def rfid_detected(self, rfid_id):
         logger.info("rfid_detected: %s", rfid_id)

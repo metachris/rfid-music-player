@@ -22,14 +22,17 @@ from logzero import setup_logger
 # Internal imports
 from rfid_music_player.core import database
 from rfid_music_player.core import settings
+from rfid_music_player.core import filesystem
 from rfid_music_player.core import utils
 from rfid_music_player.core.eventhub import ee
+from basecomponent import BaseComponent
 
-logger = setup_logger(logfile=settings.LOGFILE)
+logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
 
-class API:
+class API(BaseComponent):
     app = None
+    server = None
     sockets = None
 
     # active websocket connections to clients
@@ -39,6 +42,12 @@ class API:
     state_download = None
 
     def __init__(self):
+        BaseComponent.__init__(self)
+
+        # Shutting down self.server takes about 1 minute, which is way too long. Therefore this
+        # thread is run in daemon mode so it exits immediately when the main process exits.
+        self.daemon = True
+
         try:
             self.state_download = None
             self.websockets = []
@@ -138,7 +147,7 @@ class API:
         def _api_youtube_dl(youtubeId):
             # eg. rJWZhitXWzI
             self.youtube_download(youtubeId)
-            return "download successful"
+            return "download started"
 
         return app, sockets
 
@@ -147,6 +156,7 @@ class API:
         Download a video from youtube and convert to audio.
         Broadcast progress via websockets.
         """
+        lock_uid = filesystem.make_writable()
         self.state_download = "started"
         ee.emit("download_state", self.state_download)
 
@@ -180,12 +190,16 @@ class API:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([youtube_id])
 
+        filesystem.release_writable(lock_uid)
+
     def websocket_send(self, message):
         for websocket in self.websockets:
             websocket.send(message)
 
-    def _run(self, debug=False):
+    def run(self):
         """ Runs the app """
+        debug=False
+
         # Step 1: Setup eventhub handlers
         @ee.on("rfid_detected")
         def _rfid_detected(rfid_id):
@@ -207,27 +221,22 @@ class API:
             port = int(os.environ.get("RFID_API_PORT", 5000))
             self.app.config.update(dict(DEBUG=debug))
             logger.info("Webserver listening on http://localhost:%s", port)
-            server = pywsgi.WSGIServer(('', port), self.app, handler_class=WebSocketHandler)
-            server.serve_forever()
+            self.server = pywsgi.WSGIServer(('', port), self.app, handler_class=WebSocketHandler)
+            self.server.serve_forever()
         except Exception as e:
             logger.exception(e)
             raise
+        finally:
+            logger.info("api end")
 
-    def run(self, debug=True, threaded=False):
-        """ Runs the Flask app with specific settings """
-        if threaded and debug:
-            raise Exception("API cannot run threaded with debug=True")
-
-        if threaded:
-            app_thread = threading.Thread(target=self._run)
-            app_thread.daemon = True
-            app_thread.start()
-            return app_thread
-
-        self._run(debug=debug)
+    def shutdown(self):
+        # This server.stop() takes exactly 1 minute (wtf). To make this faster, this
+        # thread is run in daemon mode so it exits immediately when the main process exits.
+        self.server.stop()
 
 
 def test_fake_download():
+    """ Fake download progress """
     logger.info("test fake download")
     for i in xrange(0, 100, 5):
         ee.emit("download_progress", i)
@@ -235,8 +244,10 @@ def test_fake_download():
 
 
 def test_threaded():
+    """ Test api with keyboard input sent out as rfid_detected """
     api = API()
-    thread = api.run(threaded=True, debug=False)
+    api.start()
+
     try:
         # Wait for input to fake rfid_detected messages
         while True:
@@ -248,6 +259,7 @@ def test_threaded():
     except KeyboardInterrupt:
         pass
     finally:
+        api.shutdown()
         print("\nbye")
 
 

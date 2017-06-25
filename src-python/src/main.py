@@ -11,7 +11,7 @@ from rfid_music_player.components.api import API
 from rfid_music_player.components.player import Player
 from rfid_music_player.inputs.rfid_mfrc522 import RFIDReader
 
-logger = setup_logger(logfile=settings.LOGFILE)
+logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
 
 
