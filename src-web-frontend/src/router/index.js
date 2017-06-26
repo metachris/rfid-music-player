@@ -16,14 +16,19 @@ export default new Router({
       component: require('@/components/Tags')
     },
     {
+      path: '/add-tag',
+      name: 'AddTag',
+      component: require('@/components/AddTag')
+    },
+    {
       path: '/music',
       name: 'Music',
       component: require('@/components/Music')
     },
     {
-      path: '/add-tag',
-      name: 'AddTag',
-      component: require('@/components/AddTag')
+      path: '/music/:songHash',
+      name: 'Song',
+      component: require('@/components/Song')
     }
   ]
 })

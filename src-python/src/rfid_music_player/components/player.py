@@ -11,7 +11,7 @@ from rfid_music_player.core import database
 from rfid_music_player.core import settings
 from rfid_music_player.core import utils
 from rfid_music_player.core.eventhub import ee, EVENT_RFID_TAG_DETECTED, EVENT_RFID_TAG_REMOVED
-from basecomponent import BaseComponent
+from rfid_music_player.components.basecomponent import BaseComponent
 
 logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
@@ -27,6 +27,7 @@ class Player(BaseComponent):
         self.fn_sound = None
         self.is_playing = False
 
+    def run_component(self):
         @ee.on(EVENT_RFID_TAG_DETECTED)
         def _rfid_detected(rfid_id):
             self.rfid_detected(rfid_id)
@@ -36,7 +37,7 @@ class Player(BaseComponent):
             if self.is_playing:
                 self.kill_player()
 
-    def run_component(self):
+        # Now just wait forever (until quit event)
         self.event_quit.wait()
 
     def shutdown(self):
@@ -44,11 +45,11 @@ class Player(BaseComponent):
         self.event_quit.set()
 
     def rfid_detected(self, rfid_id):
-        logger.info("rfid_detected: %s", rfid_id)
+        logger.debug("rfid_detected: %s", rfid_id)
 
         # - Find song in database
         tag = database.get_tag(rfid_id)
-        logger.info("- db returned tag: %s", tag)
+        logger.debug("- db returned tag: %s", tag)
         if not tag:
             logger.info("- no song found for this tag.")
             return
@@ -67,17 +68,16 @@ class Player(BaseComponent):
             self.kill_player()
 
         player_cmd = utils.make_cmd_playback(self.fn_sound)
-        logger.info("Starting playback with command: %s", " ".join(player_cmd))
+        logger.debug("Starting playback with command: %s", " ".join(player_cmd))
         self.player_process = subprocess.Popen(player_cmd, preexec_fn=os.setsid)
         self.is_playing = True
-        logger.info('player PID is ' + str(self.player_process.pid))
+        # logger.debug('player PID is ' + str(self.player_process.pid))
         self.player_process.wait()  # Now wait for player to finish
         self.player_process = None
         self.is_playing = False
-        logger.info("end of playback: >> %.3f", time.time() % 100)
 
     def start_playback_threaded(self):
-        logger.info("starting threaded playback mode")
+        # logger.info("starting threaded playback mode")
         thread = Thread(target=self.start_playback)
         thread.daemon = True
         thread.start()
@@ -90,7 +90,7 @@ class Player(BaseComponent):
         if self.player_process and not self.player_process.poll():
             # player is running... kill now by sending SIGTERM
             # to all children of the process groups
-            logger.info("killing player with PID %s", str(self.player_process.pid))
+            logger.debug("killing player with PID %s", str(self.player_process.pid))
             try:
                 os.killpg(os.getpgid(self.player_process.pid), signal.SIGTERM)
             except Exception as e:

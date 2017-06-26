@@ -28,7 +28,7 @@ from rfid_music_player.core import settings
 from rfid_music_player.core import filesystem
 from rfid_music_player.core import utils
 from rfid_music_player.core.eventhub import ee, EVENT_RFID_TAG_DETECTED, EVENT_RFID_TAG_REMOVED
-from basecomponent import BaseComponent
+from rfid_music_player.components.basecomponent import BaseComponent
 
 logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
@@ -105,6 +105,11 @@ class API(BaseComponent):
         @app.route('/thumbnail/<path:path>')
         def _thumbnail(path):
             logger.debug("thumbnail: %s", path)
+            return send_from_directory(settings.PATH_MUSIC, path)
+
+        @app.route('/music/<path:path>')
+        def _music(path):
+            logger.debug("music: %s", path)
             return send_from_directory(settings.PATH_MUSIC, path)
 
         @app.route('/static/<path:path>')

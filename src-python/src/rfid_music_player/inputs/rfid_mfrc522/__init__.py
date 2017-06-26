@@ -41,7 +41,7 @@ class RFIDReader(BaseComponent):
             return self.run_fake()
 
         # Running on the Pi
-        self.MIFAREReader = MFRC522.MFRC522()
+        self.MIFAREReader = MFRC522.MFRC522()  # TODO: This line has problems if not in read_rfid()!!
         while not self.event_quit.is_set():
             self.read_rfid()
             time.sleep(0.5)
@@ -93,9 +93,9 @@ class RFIDReader(BaseComponent):
     def run_fake(self):
         """ Waits for RFID input and plays the correct song """
         while not self.event_quit.is_set():
-            logger.info("Waiting for RFID chip 123...")
-            ee.emit(EVENT_RFID_TAG_DETECTED, "1234")
-            self.event_quit.wait(10)
+            logger.info("Faking RFID 1234 found.")
+            ee.emit(EVENT_RFID_TAG_DETECTED, "1234xxx")
+            self.event_quit.wait(60)
 
     def shutdown(self):
         self.event_quit.set()

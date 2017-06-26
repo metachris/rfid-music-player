@@ -16,7 +16,7 @@ logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 
 
 # SECONDS_BETWEEN_CHECKS = 60 * 60  # 1h
-SECONDS_BETWEEN_CHECKS = 5
+SECONDS_BETWEEN_CHECKS = 30
 
 
 def execute_update():
@@ -46,9 +46,18 @@ class Updater(BaseComponent):
     """
     Service which checks for updates periodically
     """
-    def __init__(self, fake_tag_current=None):
+    def __init__(self, fake_update_available=None):
         BaseComponent.__init__(self)
-        self.fake_tag_current = fake_tag_current
+        if fake_update_available is None:
+            self.fake_tag_current = None
+            self.fake_tag_latest = None
+        else:
+            if fake_update_available:
+                self.fake_tag_current = "0.1.0"
+                self.fake_tag_latest = "0.2.0"
+            else:
+                self.fake_tag_current = "0.1.0"
+                self.fake_tag_latest = "0.1.0"
 
     def run_component(self):
         # Register event handlers
@@ -64,20 +73,20 @@ class Updater(BaseComponent):
     def check_for_updates(self):
         logger.info("Checking for updates...")
 
-        cmd_update_git_info = "cd %s && git fetch --tags" % (settings.PATH_PROJECT_ROOT)
-        # logger.debug(cmd_update_git_info)
-        subprocess.check_output(cmd_update_git_info, shell=True)
+        if self.fake_tag_latest:
+            tag_latest = self.fake_tag_latest.strip().strip("v")
+        else:
+            cmd_update_git_info = "cd %s && git fetch github --tags" % (settings.PATH_PROJECT_ROOT)
+            subprocess.check_output(cmd_update_git_info, shell=True)
 
-        cmd_update_git_latest_tag = "cd %s && git tag -l | tail -n 1" % (settings.PATH_PROJECT_ROOT)
-        # logger.debug(cmd_update_git_latest_tag)
-        tag_latest = subprocess.check_output(cmd_update_git_latest_tag, shell=True).strip().strip("v")
-        # logger.debug("Latest Tag: %s", tag_latest)
+            cmd_update_git_latest_tag = "cd %s && git tag -l | tail -n 1" % (settings.PATH_PROJECT_ROOT)
+            tag_latest = subprocess.check_output(cmd_update_git_latest_tag, shell=True).strip().strip("v")
+            # logger.debug("Latest Tag: %s", tag_latest)
 
         if self.fake_tag_current:
             tag_current = self.fake_tag_current.strip().strip("v")
         else:
             cmd_git_current_tag = "cd %s && git describe --tags --abbrev=0" % (settings.PATH_PROJECT_ROOT)
-            # logger.debug(cmd_git_current_tag)
             tag_current = subprocess.check_output(cmd_git_current_tag, shell=True).strip().strip("v")
             # logger.debug("Current Tag: %s", tag_current)
 
@@ -93,7 +102,7 @@ if __name__ == "__main__":
     def _update_available(msg):
         tag_current, tag_latest = msg
         logger.debug("> ee update available: %s -> %s", tag_current, tag_latest)
-        ee.emit(EVENT_UPDATE_EXECUTE)
-        exit(0)
+        # ee.emit(EVENT_UPDATE_EXECUTE)
+        # exit(0)
 
-    Updater("v0.0.1").run_dev()
+    Updater(True).run_dev()

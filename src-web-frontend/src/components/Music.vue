@@ -17,7 +17,7 @@
     </div>
 
     <div class="songs">
-      <div v-for="song in songs" class="song">
+      <div v-for="song in songs" class="song" @click="viewSong(song.hash)">
         <div v-if="song.thumbnail" class="song-thumbnail"><img :src="apiBaseUrl + '/thumbnail/' + song.thumbnail"></div>
         <div class="song-filename">{{ song.filename }}</div>
         <div style="clear: both;"></div>
@@ -59,6 +59,11 @@ export default {
     setDownloadState (downloadState) {
       console.log('setDownloadState', downloadState)
       this.downloadState = downloadState
+    },
+
+    viewSong (songHash) {
+      console.log('viewSong', songHash)
+      this.$router.push({ name: 'Song', params: { songHash: songHash } })
     },
 
     ...mapActions([

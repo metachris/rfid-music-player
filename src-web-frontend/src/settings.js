@@ -8,10 +8,10 @@ let settings = {
 }
 
 if (IS_DEV) {
-  // settings.API_BASE_URL = 'http://0.0.0.0:5000'
-  // settings.WEBSOCKET_URL = `ws://0.0.0.0:5000/ws`
-  settings.API_BASE_URL = 'http://roberry.local'
-  settings.WEBSOCKET_URL = `ws://roberry.local/ws`
+  settings.API_BASE_URL = 'http://0.0.0.0:5000'
+  settings.WEBSOCKET_URL = `ws://0.0.0.0:5000/ws`
+  // settings.API_BASE_URL = 'http://roberry.local'
+  // settings.WEBSOCKET_URL = `ws://roberry.local/ws`
 } else if (IS_PRODUCTION) {
   settings.API_BASE_URL = 'http://roberry.local'
   settings.WEBSOCKET_URL = `ws://roberry.local/ws`

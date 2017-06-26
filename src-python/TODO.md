@@ -1,5 +1,7 @@
 TODO
 
-* If youtube-dl fails, cleanup
-* RFID for commands
-  * STOP playing
+* If youtube-dl fails, cleanup (webm, thumbnail)
+
+Errors:
+
+* `Error: can't open device: Too many open files` (probably in rfid reader)

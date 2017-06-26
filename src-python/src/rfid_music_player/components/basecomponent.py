@@ -1,6 +1,11 @@
 """
-This is a blueprint for components.
-Subclass it and you get a lot of goodies.
+This is a blueprint and superclass for components.
+Subclass it and you get a lot of goodies:
+
+* Exception handling if you use `run_component(..)` instead of `run(..)`
+* Proper shutdown and timeouts with a threading.Event
+* `run_dev()` to start the component in standalone dev mode
+* Exit with CTRL+C with graceful shutdown
 """
 import signal
 from threading import Thread, Event
@@ -14,6 +19,7 @@ logger = setup_logger(logfile=settings.LOGFILE, level=settings.LOGLEVEL)
 class BaseComponent(Thread):
     """ Example component """
     event_quit = None
+    exit_app_on_exception = True
 
     def __init__(self):
         Thread.__init__(self)
@@ -25,6 +31,8 @@ class BaseComponent(Thread):
         except Exception as e:
             logger.exception(e)
             self.shutdown()
+        # finally:
+        #     logger.debug("run end")
 
     def run_component(self):
         while not self.event_quit.is_set():
@@ -45,13 +53,12 @@ class BaseComponent(Thread):
         self.start()
 
         try:
-            while self.is_alive():
-                self.join(1)
+            while not self.event_quit.is_set():
+                self.event_quit.wait(1)
         except KeyboardInterrupt:
             pass
         finally:
             self.shutdown()
-            print("bye")
 
         self.join()
 

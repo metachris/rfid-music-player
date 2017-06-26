@@ -14,3 +14,10 @@ def stop_all_input_threads():
     for thread in input_threads:
         thread.shutdown()
     return input_threads
+
+
+def is_all_input_threads_alive():
+    for thread in input_threads:
+        if not thread.is_alive():
+            return False
+    return True
