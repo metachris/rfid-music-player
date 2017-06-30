@@ -63,6 +63,9 @@ class RFIDReader(BaseComponent):
 
         # If we have the UID, continue
         if status == self.MIFAREReader.MI_OK:
+            # We need to make one dummy MFRC522 request, else it will always return nothing found on next read
+            self.MIFAREReader.MFRC522_Request(self.MIFAREReader.PICC_REQIDL)
+
             # Print UID
             card_uid = "%s-%s-%s-%s" % (str(uid[0]), str(uid[1]), str(uid[2]), str(uid[3]))
             logger.debug("Card detected with UID: %s", card_uid)
@@ -78,7 +81,7 @@ class RFIDReader(BaseComponent):
 
             self.tag_last_uid = card_uid
             self.tag_last_timestamp = time_now
-            logger.debug("sending event rfid_tag_removed:%s" % self.tag_last_uid)
+            logger.debug("sending event %s:%s" % (EVENT_RFID_TAG_DETECTED, self.tag_last_uid))
             ee.emit(EVENT_RFID_TAG_DETECTED, card_uid)
 
         else:
